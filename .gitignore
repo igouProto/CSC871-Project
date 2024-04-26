@@ -1,0 +1,3 @@
+# ignore what's in ./dataset
+dataset/*
+!dataset/.gitkeep
