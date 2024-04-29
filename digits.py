@@ -35,8 +35,14 @@ def load_mnist_data(data_dir):
 
     return train_data, train_labels, test_data, test_labels
 
-#datasets are already downloaded and unziped in ./dataset 
-dataset_path = './dataset'
-train_images, train_labels, test_images, test_labels = load_mnist_data(dataset_path)
-#print shapes of train_images, train_labels, test_images, test_labels
-print(train_images.shape, train_labels.shape, test_images.shape, test_labels.shape)
+def main():
+    #datasets are already downloaded and unziped in ./dataset 
+    dataset_path = './dataset'
+    train_images, train_labels, test_images, test_labels = load_mnist_data(dataset_path)
+    #print shapes of train_images, train_labels, test_images, test_labels
+    print(train_images.shape, train_labels.shape, test_images.shape, test_labels.shape)
+
+    return train_images, train_labels, test_images, test_labels
+
+if __name__ == '__main__':
+    train_images, train_labels, test_images, test_labels = main()
