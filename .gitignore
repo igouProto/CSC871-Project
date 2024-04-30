@@ -1,3 +1,5 @@
 # ignore what's in ./dataset
 dataset/*
 !dataset/.gitkeep
+.DS_Store
+model.pth
