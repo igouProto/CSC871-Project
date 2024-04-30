@@ -3,3 +3,4 @@ dataset/*
 !dataset/.gitkeep
 .DS_Store
 model.pth
+*.pyc
