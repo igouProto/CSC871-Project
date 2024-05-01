@@ -9,19 +9,9 @@ class DigitClassifier(nn.Module):
             nn.ReLU(True),
             nn.Linear(128, 64),
             nn.ReLU(True),
-            nn.Linear(64, num_classes)
+            nn.Linear(64, num_classes),
+            # nn.Softmax(dim=1)
         )
-        # input layer
-    ##    self.all_layers.add_module('input', torch.nn.Linear(num_features, neurons_per_layer))
-      ##  self.all_layers.add_module('input_activation', activation_function)
-
-        # hidden layers
-      ##  for i in range(numbers_of_layers):
-      ##      self.all_layers.add_module(f'hidden_{i}', torch.nn.Linear(neurons_per_layer, neurons_per_layer))
-      ##      self.all_layers.add_module(f'hidden_{i}_activation', activation_function)
-
-        # output layer
-     ##   self.all_layers.add_module('output', torch.nn.Linear(neurons_per_layer, num_classes))
     
 
     def forward(self, x):
