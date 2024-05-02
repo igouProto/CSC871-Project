@@ -13,12 +13,28 @@ import cv2
 
 st.set_page_config(layout='centered')
 
-st.subheader('Quick, Draw!')
+st.title('Quick, Draw!')
 st.text('But it Only works with Digits - a simple MNIST classifier')
 
-# select your model
-model_selection = st.selectbox('Select Model', ['Simple CNN', 'Simple NN'])
+# options panel
+with st.sidebar:
+    st.title('Options!')
 
+    model_selection = st.selectbox('Model', ['Simple CNN', 'Simple NN'])
+
+    # pen stroke width
+    strk_width = st.slider('Pen Stroke Width', min_value=3, max_value=15, value=10, step=1)
+
+    # since the predictions can be affected by the normalization of the input,
+    # let's let the user play with it
+    normalize = False
+    normalization = 255.0
+    normalize = st.checkbox('Custom Input Normalization', value=False)
+    if normalize:
+        normalization = st.slider('Normalization?', min_value=1.0, max_value=255.0, value=255.0, step=1.0, format='%d')
+
+
+# select your model
 @st.cache_resource
 def load_model(model_selection):   
     model = None
@@ -48,25 +64,20 @@ if md:
 else:
     st.text('Model loading failed...')
 
+
 # canvas and drawing display
 canv, display = st.columns(2)
 sub_disp1, sub_disp2 = st.columns(2)
-normalize_panel1, normalize_panel2 = st.columns(2)
 
 img = None
 canvas = None
-
-# since the predictions can be affected by the normalization of the input,
-# let's let the user play with it
-normalize = False
-normalization = 255.0
 
 with canv:
     st.subheader('Draw!')
     # the square canvas
     canvas = st_canvas(
         fill_color='rgba(0, 0, 0, 0)',
-        stroke_width=12,
+        stroke_width=strk_width,
         stroke_color='rgb(255, 255, 255)',
         background_color='#000',
         update_streamlit=True,
@@ -77,13 +88,6 @@ with canv:
         initial_drawing={},
         key='canvas'
     )
-
-    with normalize_panel1:
-        normalize = st.checkbox('Custom Input Normalization', value=False)
-
-    with normalize_panel2:
-        if normalize:
-            normalization = st.slider('Normalization?', min_value=1.0, max_value=255.0, value=255.0, step=1.0, format='%d')
 
 predicted_class = None
 predictions = None
