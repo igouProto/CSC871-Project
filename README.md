@@ -1,5 +1,7 @@
 # Hand-written Digit Recognition
 
+Live Demo: https://csc871-mnist.streamlit.app/
+
 Using MNIST Database of Handwritten Digits
 https://archive.ics.uci.edu/dataset/683/mnist+database+of+handwritten+digits
 
