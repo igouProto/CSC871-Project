@@ -8,6 +8,7 @@ import torchvision.transforms as transforms
 
 from modelNN import DigitClassifier
 from modelCNN2 import SimpleCNN2
+from mobileNet import ModifiedMobileNetV2
 
 import cv2
 
@@ -20,7 +21,7 @@ st.text("But it Only works with Digits - a simple MNIST classifier")
 with st.sidebar:
     st.title("Options!")
 
-    model_selection = st.selectbox("Model", ["Simple CNN", "Simple NN"])
+    model_selection = st.selectbox("Model", ["Simple CNN", "Simple NN", "MobileNetV2"])
 
     # pen stroke width
     strk_width = st.slider(
@@ -57,6 +58,13 @@ def load_model(model_selection):
         try:
             model.load_state_dict(torch.load("model_cnn2_adam_b32.pth"))
             print("Model loaded! (CNN)")
+        except RuntimeError as e:
+            st.text(f"An error occurred while loading the model: {e}")
+    elif model_selection == "MobileNetV2":
+        model = ModifiedMobileNetV2(10)
+        try:
+            model.load_state_dict(torch.load("model_mobilenet_adam_b16.pth", map_location=torch.device('cpu')))
+            print("Model loaded! (MobileNetV2)")
         except RuntimeError as e:
             st.text(f"An error occurred while loading the model: {e}")
     else:
@@ -106,13 +114,12 @@ with display:
         canvas.image_data = cv2.cvtColor(canvas.image_data, cv2.COLOR_RGBA2RGB)
         img = cv2.resize(canvas.image_data, (28, 28))
 
-        # convert to tensor (acceptable by simple NN and CNN) and grayscale
+        # convert to tensor and grayscale
         img_tensor = (torch.tensor(img).float() / (normalization if normalize else 127.0)).permute(2, 0, 1)  # [28, 28, 3] -> [3, 28, 28]
         transform = transforms.Grayscale(num_output_channels=1)  # [3, 28, 28] -> [1, 28, 28]
         img_tensor = transform(img_tensor)
+        img_tensor = img_tensor.unsqueeze(0)  # [1, 28, 28] -> [1, 1, 28, 28]
 
-        if model_selection == "Simple CNN":
-            img_tensor = img_tensor.unsqueeze(0)  # [1, 28, 28] -> [1, 1, 28, 28]
 
         # display raw image and processed tensor
         st.image(img_tensor.view(28, 28).numpy(), clamp=True, width=140)
